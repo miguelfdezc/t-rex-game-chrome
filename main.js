@@ -36,6 +36,14 @@ function clearCanvas() {
     canvas.height = height;
 }
 
+function drawRex() {
+    context.drawImage(imgRex,0,0,89,96,100,100,50,50);
+}
+
+function gravity() {
+
+}
+
 // ------------------------------------------------------
 // Main loop
 var FPS = 10;
@@ -48,4 +56,6 @@ setInterval(function() {
 
 function main() {
     clearCanvas();
+    gravity();
+    drawRex();
 }
