@@ -9,6 +9,7 @@ document.addEventListener('keydown', function(event) {
             cloud.speed = 1;
             cactus.x = width + 100;
             cloud.x = width + 100;
+            level.points = 0;
             level.dead = false;
         }
     }
@@ -79,6 +80,7 @@ function drawCactus() {
 function logicCactus() {
     if(cactus.x < -100) {
         cactus.x = width + 100;
+        level.points++;
     } else {
         cactus.x -= level.speed;
     }
@@ -118,6 +120,17 @@ function collide() {
     }
 }
 
+function points() {
+    context.font = "30px impact";
+    context.fillStyle = 'grey';
+    context.fillText(`${level.points}`,600,50);
+
+    if(level.dead == true) {
+        context.font = "60px impact";
+        context.fillText('GAME OVER',240,150);
+    }
+}
+
 // ---------------------------------------------------------
 // Main loop
 var FPS = 50;
@@ -136,4 +149,5 @@ function main() {
     drawCactus();
     drawCloud();
     drawRex();
+    points();
 }
