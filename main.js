@@ -35,10 +35,17 @@ function clearCanvas() {
     canvas.height = height;
 }
 
-var trex = {y: 250, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
+var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
+var ground = 200;
+var level = {speed: 9, points: 0};
+var cactus = {x: 300, y: ground-25};
 
 function drawRex() {
     context.drawImage(imgRex,0,0,89,96,100,trex.y,50,50);
+}
+
+function drawCactus() {
+    context.drawImage(imgCactus,0,0,51,102,cactus.x,cactus.y,38,75);
 }
 
 function toJump() {
@@ -48,10 +55,10 @@ function toJump() {
 
 function gravity() {
     if(trex.jumping == true) {
-        if(trex.y > 250) {
+        if(trex.y - trex.speedY - trex.gravity > ground) {
             trex.jumping = false;
             trex.speedY = 0; // stop the speed
-            trex.y = 250; // put the rex in the ground
+            trex.y = ground; // put the rex in the ground
         }
         trex.speedY -= trex.gravity;
         trex.y -= trex.speedY;
@@ -60,13 +67,14 @@ function gravity() {
 
 // ------------------------------------------------------
 // Main loop
-var FPS = 10;
+var FPS = 50;
 setInterval(function() {
     main();
-},1000/10);
+},1000/FPS);
 
 function main() {
     clearCanvas();
     gravity();
+    drawCactus();
     drawRex();
 }
