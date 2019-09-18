@@ -40,6 +40,7 @@ var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: fa
 var level = {speed: 9, points: 0};
 var cactus = {x: width + 100, y: ground-25};
 var cloud = {x: 400, y: 100};
+var groundG = {x: 0, y: ground + 30};
 
 function drawRex() {
     context.drawImage(imgRex,0,0,89,96,100,trex.y,50,50);
@@ -86,6 +87,18 @@ function drawCloud() {
     context.drawImage(imgCloud,0,0,95,35,cloud.x,cloud.y,82,31);
 }
 // ---------------------------------------------------------
+function drawGround() {
+    context.drawImage(imgGround,groundG.x,0,700,30,0,groundG.y,700,30);
+}
+
+function logicGround() {
+    if(groundG.x > 700) {
+        groundG.x = 0;
+    } else {
+        groundG.x += level.speed;
+    }
+}
+// ---------------------------------------------------------
 // Main loop
 var FPS = 50;
 setInterval(function() {
@@ -97,6 +110,8 @@ function main() {
     gravity();
     logicCactus();
     logicCloud();
+    logicGround();
+    drawGround();
     drawCactus();
     drawCloud();
     drawRex();
