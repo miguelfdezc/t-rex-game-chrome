@@ -1,7 +1,16 @@
 document.addEventListener('keydown', function(event) {
     if(event.keyCode == 32) {
         console.log("jump");
-        toJump();
+
+        if(level.dead == false)
+            toJump();
+        else {
+            level.speed = 9;
+            cloud.speed = 1;
+            cactus.x = width + 100;
+            cloud.x = width + 100;
+            level.dead = false;
+        }
     }
 })
 
@@ -37,9 +46,9 @@ function clearCanvas() {
 
 var ground = 200;
 var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
-var level = {speed: 9, points: 0};
+var level = {speed: 9, points: 0, dead: false};
 var cactus = {x: width + 100, y: ground-25};
-var cloud = {x: 400, y: 100};
+var cloud = {x: 400, y: 100, speed: 1};
 var groundG = {x: 0, y: ground + 30};
 
 function drawRex() {
@@ -79,7 +88,7 @@ function logicCloud() {
     if(cloud.x < -100) {
         cloud.x = width + 100;
     } else {
-        cloud.x -= 2;
+        cloud.x -= cloud.speed;
     }
 }
 
@@ -98,6 +107,17 @@ function logicGround() {
         groundG.x += level.speed;
     }
 }
+
+function collide() {
+    if(cactus.x >= 100 && cactus.x <= 150) {
+        if(trex.y >= ground-25) {
+            level.dead = true;
+            level.speed = 0;
+            cloud.speed = 0;
+        }
+    }
+}
+
 // ---------------------------------------------------------
 // Main loop
 var FPS = 50;
@@ -108,6 +128,7 @@ setInterval(function() {
 function main() {
     clearCanvas();
     gravity();
+    collide();
     logicCactus();
     logicCloud();
     logicGround();
