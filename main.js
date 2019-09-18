@@ -38,7 +38,7 @@ function clearCanvas() {
 var ground = 200;
 var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
 var level = {speed: 9, points: 0};
-var cactus = {x: 300, y: ground-25};
+var cactus = {x: width + 100, y: ground-25};
 
 function drawRex() {
     context.drawImage(imgRex,0,0,89,96,100,trex.y,50,50);
@@ -46,6 +46,14 @@ function drawRex() {
 
 function drawCactus() {
     context.drawImage(imgCactus,0,0,51,102,cactus.x,cactus.y,38,75);
+}
+
+function logicCactus() {
+    if(cactus.x < -100) {
+        cactus.x = width + 100;
+    } else {
+        cactus.x -= level.speed;
+    }
 }
 
 function toJump() {
@@ -75,6 +83,7 @@ setInterval(function() {
 function main() {
     clearCanvas();
     gravity();
+    logicCactus();
     drawCactus();
     drawRex();
 }
