@@ -35,8 +35,8 @@ function clearCanvas() {
     canvas.height = height;
 }
 
-var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
 var ground = 200;
+var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
 var level = {speed: 9, points: 0};
 var cactus = {x: 300, y: ground-25};
 
