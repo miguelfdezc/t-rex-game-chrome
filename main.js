@@ -1,19 +1,19 @@
+// Sets a 'keydown' event to the document (jump or restart)
 document.addEventListener('keydown', function(event) {
     if(event.keyCode == 32) {
-        console.log("jump");
-
         if(level.dead == false)
-            toJump();
+            toJump(); // make the t-rex jump
         else {
-            level.speed = 9;
+          	// reset the default config
+            cloud.x = width + 100;
             cloud.speed = 1;
             cactus.x = width + 100;
-            cloud.x = width + 100;
+            level.speed = 9;
             level.points = 0;
             level.dead = false;
         }
     }
-})
+});
 
 var imgRex, imgCloud, imgCactus, imgGround;
 
@@ -38,41 +38,44 @@ function initialize() {
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
     loadImages();
-};
+}
 
 function clearCanvas() {
     canvas.width = width;
     canvas.height = height;
 }
 
-var ground = 200;
-var trex = {y: ground, speedY: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
+var bottom = 200;
+var trex = {y: bottom, speed: 0, gravity: 2, jump: 28, speedMax: 9, jumping: false};
 var level = {speed: 9, points: 0, dead: false};
-var cactus = {x: width + 100, y: ground-25};
+var cactus = {x: width + 100, y: bottom-25};
 var cloud = {x: 400, y: 100, speed: 1};
-var groundG = {x: 0, y: ground + 30};
+var ground = {x: 0, y: bottom + 30};
 
+// -------------------------T-REX---------------------------
 function drawRex() {
     context.drawImage(imgRex,0,0,89,96,100,trex.y,50,50);
 }
 
 function toJump() {
     trex.jumping = true;
-    trex.speedY = trex.jump;
+    trex.speed = trex.jump;
 }
 
+// Simulates the effects of gravity 
 function gravity() {
     if(trex.jumping == true) {
-        if(trex.y - trex.speedY - trex.gravity > ground) {
+        if(trex.y - trex.speed - trex.gravity > bottom) {
             trex.jumping = false;
-            trex.speedY = 0; // stop the speed
-            trex.y = ground; // put the rex in the ground
+            trex.speed = 0; // stop the speed
+            trex.y = bottom; // put the rex in the bottom
+        } else {
+            trex.speed -= trex.gravity;
+            trex.y -= trex.speed;
         }
-        trex.speedY -= trex.gravity;
-        trex.y -= trex.speedY;
     }
 }
-// ---------------------------------------------------------
+// -------------------------CACTUS--------------------------
 function drawCactus() {
     context.drawImage(imgCactus,0,0,51,102,cactus.x,cactus.y,38,75);
 }
@@ -85,7 +88,11 @@ function logicCactus() {
         cactus.x -= level.speed;
     }
 }
-// ---------------------------------------------------------
+// --------------------------CLOUD--------------------------
+function drawCloud() {
+    context.drawImage(imgCloud,0,0,95,35,cloud.x,cloud.y,82,31);
+}
+
 function logicCloud() {
     if(cloud.x < -100) {
         cloud.x = width + 100;
@@ -93,29 +100,26 @@ function logicCloud() {
         cloud.x -= cloud.speed;
     }
 }
-
-function drawCloud() {
-    context.drawImage(imgCloud,0,0,95,35,cloud.x,cloud.y,82,31);
-}
 // ---------------------------------------------------------
 function drawGround() {
-    context.drawImage(imgGround,groundG.x,0,700,30,0,groundG.y,700,30);
+    context.drawImage(imgGround,ground.x,0,700,30,0,ground.y,700,30);
 }
 
 function logicGround() {
-    if(groundG.x > 700) {
-        groundG.x = 0;
+    if(ground.x > 700) {
+        ground.x = 0;
     } else {
-        groundG.x += level.speed;
+        ground.x += level.speed;
     }
 }
 
+// Simple collide detection and effects
 function collide() {
     if(cactus.x >= 100 && cactus.x <= 150) {
-        if(trex.y >= ground-25) {
-            level.dead = true;
-            level.speed = 0;
-            cloud.speed = 0;
+        if(trex.y >= bottom-25) {
+            level.dead = true; // kill the t-rex
+            level.speed = 0; // stop the game
+            cloud.speed = 0; // stop the clouds
         }
     }
 }
@@ -132,8 +136,9 @@ function points() {
 }
 
 // ---------------------------------------------------------
-// Main loop
 var FPS = 50;
+
+// Main loop
 setInterval(function() {
     main();
 },1000/FPS);
